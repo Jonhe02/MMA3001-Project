@@ -1,50 +1,32 @@
 
-"""
-YOLO11 Packaging Defect Detection - Training Module.
+"""Train a YOLO11n model to detect pork packaging defects."""
 
-This module trains a YOLO11 object detection model
-using the Roboflow Pork Rasher Error Packaging dataset.
-
-The model detects five packaging defect categories:
-loose-meat, packaging-error, twisted-meat,
-unsealed, and wrinkle.
-"""
-
+from pathlib import Path
 from ultralytics import YOLO
+
+# Get the project's root directory
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 
 def main():
-    """
-    Train the YOLO11n model using the packaging dataset.
+    """Fine-tune YOLO11n on five packaging defect classes."""
 
-    Loads pretrained YOLO11n weights and fine-tunes them
-    on labelled pork packaging images.
+    # Load pretrained model weights
+    model = YOLO(str(PROJECT_ROOT / "weights" / "yolo11n.pt"))
 
-    Training configuration:
-        - Epochs: 10
-        - Image resolution: 640 x 640
-        - Batch size: 4
-        - Device: CUDA GPU 0
-
-    Returns:
-        None
-
-    Raises:
-        FileNotFoundError:
-            If the dataset or model weights cannot be found.
-        RuntimeError:
-            If training fails or CUDA is unavailable.
-    """
-    model = YOLO("weights/yolo11n.pt")
-
+    # Train using the Roboflow annotations
     model.train(
-        data="data/data.yaml",
-        epochs=10,
+        data=str(PROJECT_ROOT / "data" / "data.yaml"),
+        epochs=100,
+        patience=10,
         imgsz=640,
         batch=4,
+        workers=0,
+        cache=False,
         device=0,
-        project="runs",
-        name="packaging_detector"
+        seed=42,
+        project=str(PROJECT_ROOT / "runs"),
+        name="yolo11n_baseline"
     )
 
 
