@@ -1,0 +1,7 @@
+﻿split,class_id,class_name,annotations
+train,0,packaging-error,1694
+train,1,unsealed,1049
+valid,0,packaging-error,30
+valid,1,unsealed,81
+test,0,packaging-error,23
+test,1,unsealed,49

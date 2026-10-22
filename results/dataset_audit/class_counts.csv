@@ -1,0 +1,16 @@
+﻿split,class_id,class_name,annotations
+train,0,loose-meat,66
+train,1,packaging-error,1712
+train,2,twisted-meat,72
+train,3,unsealed,1055
+train,4,wrinkle,18
+valid,0,loose-meat,3
+valid,1,packaging-error,34
+valid,2,twisted-meat,3
+valid,3,unsealed,81
+valid,4,wrinkle,0
+test,0,loose-meat,3
+test,1,packaging-error,23
+test,2,twisted-meat,4
+test,3,unsealed,49
+test,4,wrinkle,0

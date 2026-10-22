@@ -1,0 +1,189 @@
+"""Read-only quality audit for YOLO object-detection datasets.
+
+Place this file in src/audit_dataset.py and run from the repository root:
+    python src/audit_dataset.py
+
+Dependencies: numpy, opencv-python, PyYAML (installed by Ultralytics).
+Reports are saved to results/dataset_audit/.
+"""
+
+from collections import Counter, defaultdict
+from itertools import combinations
+from pathlib import Path
+import csv
+import hashlib
+import math
+
+import cv2
+import numpy as np
+import yaml
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+
+# Two-class dataset
+DATA_ROOT = PROJECT_ROOT / "data" / "two_class"
+
+# Separate audit results from the original five-class audit
+OUTPUT_ROOT = PROJECT_ROOT / "results" / "two_class_audit"
+SPLITS = ("train", "valid", "test")
+IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".bmp", ".webp", ".tif", ".tiff"}
+NEAR_DUPLICATE_DISTANCE = 4  # Hamming distance in a 64-bit difference hash
+MAX_DUPLICATE_ROWS = 5000  # Prevent oversized reports on repetitive images
+
+
+def difference_hash(image: np.ndarray) -> int:
+    """Return a 64-bit perceptual image hash (rough similarity screening)."""
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    small = cv2.resize(gray, (9, 8), interpolation=cv2.INTER_AREA)
+    bits = (small[:, 1:] > small[:, :-1]).flat
+    value = 0
+    for bit in bits:
+        value = (value << 1) | int(bit)
+    return value
+
+
+def write_csv(path: Path, headers: list[str], rows: list[tuple]) -> None:
+    """Save a report with a header, even if there are no findings."""
+    with path.open("w", newline="", encoding="utf-8-sig") as handle:
+        writer = csv.writer(handle)
+        writer.writerow(headers)
+        writer.writerows(rows)
+
+
+def main() -> None:
+    """Check images, bounding boxes, class balance and duplicate images."""
+    if not (DATA_ROOT / "data.yaml").exists():
+        raise FileNotFoundError(f"Dataset configuration not found: {DATA_ROOT / 'data.yaml'}")
+
+    metadata = yaml.safe_load((DATA_ROOT / "data.yaml").read_text(encoding="utf-8"))
+    raw_names = metadata["names"]
+    class_names = [raw_names[i] for i in sorted(raw_names)] if isinstance(raw_names, dict) else raw_names
+    n_classes = len(class_names)
+
+    OUTPUT_ROOT.mkdir(parents=True, exist_ok=True)
+    issues = []
+    summary = []
+    class_counts = Counter()
+    digest_groups = defaultdict(list)
+    image_records = []
+
+    def flag(split: str, path: Path, issue: str, details: str = "") -> None:
+        issues.append((split, str(path.relative_to(PROJECT_ROOT)), issue, details))
+
+    for split in SPLITS:
+        image_dir = DATA_ROOT / split / "images"
+        label_dir = DATA_ROOT / split / "labels"
+        if not image_dir.is_dir() or not label_dir.is_dir():
+            flag(split, DATA_ROOT / split, "missing_split_directory", "images/ or labels/ missing")
+            continue
+
+        images = sorted(p for p in image_dir.iterdir() if p.is_file() and p.suffix.lower() in IMAGE_EXTENSIONS)
+        image_stems = {p.stem for p in images}
+        missing_label = empty_label = corrupt_image = labelled_image = annotations = 0
+
+        for p in images:
+            label = label_dir / (p.stem + ".txt")
+            # Read using np.fromfile for compatibility with Windows paths.
+            try:
+                decoded = cv2.imdecode(np.fromfile(str(p), dtype=np.uint8), cv2.IMREAD_COLOR)
+                if decoded is None:
+                    raise ValueError("Image decoder returned None")
+                digest = hashlib.sha256(p.read_bytes()).hexdigest()
+                digest_groups[digest].append((split, p))
+                image_records.append((split, p, digest, difference_hash(decoded)))
+            except (OSError, ValueError, cv2.error) as exc:
+                corrupt_image += 1
+                flag(split, p, "unreadable_image", str(exc))
+
+            if not label.exists():
+                missing_label += 1
+                flag(split, p, "missing_label_file", "May be an intentional background image")
+                continue
+
+            try:
+                lines = [s.strip() for s in label.read_text(encoding="utf-8-sig").splitlines() if s.strip()]
+            except (OSError, UnicodeError) as exc:
+                flag(split, label, "unreadable_label_file", str(exc))
+                continue
+
+            if not lines:
+                empty_label += 1
+                flag(split, label, "empty_label_file", "May be an intentional background image")
+                continue
+
+            labelled_image += 1
+            seen_rows = set()
+            for line_no, line in enumerate(lines, 1):
+                parts = line.split()
+                if len(parts) != 5:
+                    flag(split, label, "malformed_annotation", f"line {line_no}: expected class x_center y_center width height")
+                    continue
+                try:
+                    c, x, y, w, h = map(float, parts)
+                except ValueError:
+                    flag(split, label, "non_numeric_annotation", f"line {line_no}")
+                    continue
+                if not all(math.isfinite(v) for v in (c, x, y, w, h)):
+                    flag(split, label, "non_finite_annotation", f"line {line_no}")
+                    continue
+                if not c.is_integer() or not (0 <= int(c) < n_classes):
+                    flag(split, label, "invalid_class_id", f"line {line_no}: class {c}")
+                    continue
+                if w <= 0 or h <= 0 or min(x - w / 2, y - h / 2) < -1e-5 or max(x + w / 2, y + h / 2) > 1 + 1e-5:
+                    flag(split, label, "invalid_bounding_box", f"line {line_no}: {(x, y, w, h)}")
+                    continue
+                if line in seen_rows:
+                    flag(split, label, "repeated_annotation", f"line {line_no}")
+                seen_rows.add(line)
+                class_counts[(split, int(c))] += 1
+                annotations += 1
+
+        for label in label_dir.glob("*.txt"):
+            if label.stem not in image_stems:
+                flag(split, label, "orphan_label_file", "No matching image filename")
+        summary.append((split, len(images), labelled_image, missing_label, empty_label, corrupt_image, annotations))
+
+    # Exact copies: compare byte checksums, including copies across different splits.
+    duplicate_rows = []
+    for records in digest_groups.values():
+        if len(records) < 2:
+            continue
+        for a, b in combinations(records, 2):
+            if len(duplicate_rows) >= MAX_DUPLICATE_ROWS:
+                break
+            duplicate_rows.append(("exact", a[0], str(a[1].relative_to(PROJECT_ROOT)), b[0],
+                                   str(b[1].relative_to(PROJECT_ROOT)), 0))
+
+    # Near copies: compare train/valid/test to detect possible data leakage.
+    # This is a screening heuristic, not proof that two photos are of the same package.
+    for a, b in combinations(image_records, 2):
+        if len(duplicate_rows) >= MAX_DUPLICATE_ROWS:
+            break
+        if a[0] == b[0] or a[2] == b[2]:
+            continue
+        distance = (a[3] ^ b[3]).bit_count()
+        if distance <= NEAR_DUPLICATE_DISTANCE:
+            duplicate_rows.append(("possible_near_duplicate", a[0], str(a[1].relative_to(PROJECT_ROOT)),
+                                   b[0], str(b[1].relative_to(PROJECT_ROOT)), distance))
+
+    write_csv(OUTPUT_ROOT / "summary.csv",
+              ["split", "images", "labelled_images", "missing_label_files", "empty_label_files", "corrupt_images", "valid_annotations"],
+              summary)
+    write_csv(OUTPUT_ROOT / "class_counts.csv", ["split", "class_id", "class_name", "annotations"],
+              [(s, i, str(name), class_counts[(s, i)]) for s in SPLITS for i, name in enumerate(class_names)])
+    write_csv(OUTPUT_ROOT / "issues.csv", ["split", "file", "issue", "details"], issues)
+    write_csv(OUTPUT_ROOT / "duplicate_candidates.csv",
+              ["type", "split_a", "image_a", "split_b", "image_b", "hash_distance"], duplicate_rows)
+
+    print("Dataset audit complete (no files were modified).")
+    for split, images, labelled, missing, empty, corrupt, annotations in summary:
+        print(f"{split:5s}: {images} images, {annotations} valid boxes, {missing} missing labels, "
+              f"{empty} empty labels, {corrupt} unreadable images")
+    print(f"Issues to review: {len(issues)}")
+    print(f"Duplicate candidates: {len(duplicate_rows)} (report capped at {MAX_DUPLICATE_ROWS} rows)")
+    print(f"Reports: {OUTPUT_ROOT}")
+    print("NOTE: Missing/empty labels may be intentional negative examples; near-duplicate flags may be false positives.")
+
+
+if __name__ == "__main__":
+    main()

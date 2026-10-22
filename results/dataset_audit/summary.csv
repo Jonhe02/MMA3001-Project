@@ -1,0 +1,4 @@
+﻿split,images,labelled_images,missing_label_files,empty_label_files,corrupt_images,valid_annotations
+train,3349,2665,0,684,0,2923
+valid,120,106,0,14,0,121
+test,80,68,0,12,0,79
