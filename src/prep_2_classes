@@ -4,9 +4,10 @@
 from pathlib import Path
 from shutil import copy2
 
+" Change these to set directory and the name for the generated file"
 ROOT = Path(__file__).resolve().parent.parent
-SOURCE = ROOT / "data"
-DEST = SOURCE / "two_class"
+SOURCE = ROOT / "data" / "3 - raw_unaug"
+DEST = ROOT / "data" / "4 - two_class_v2"
 
 # Original class ID -> new class ID
 CLASS_MAP = {

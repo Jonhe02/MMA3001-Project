@@ -1,0 +1,22 @@
+﻿split,file,issue,details
+train,data\4 - two_class_v2\train\labels\frame_with_red_11770_jpg.rf.9bd1c3ee7d91ce3099cc800151027bda.txt,empty_label_file,May be an intentional background image
+train,data\4 - two_class_v2\train\labels\frame_with_red_13891_jpg.rf.725c1b2b8828771e7c3a392c311da3ef.txt,empty_label_file,May be an intentional background image
+train,data\4 - two_class_v2\train\labels\frame_with_red_1696_jpg.rf.f6a2a76b6d07bfa07e02088d5d833e48.txt,empty_label_file,May be an intentional background image
+train,data\4 - two_class_v2\train\labels\frame_with_red_207_jpg.rf.f7a1afe3aaa8a01d3026e251d486368a.txt,empty_label_file,May be an intentional background image
+train,data\4 - two_class_v2\train\labels\frame_with_red_2320_jpg.rf.53e1a335f6d24c9993dbfcde361305f7.txt,empty_label_file,May be an intentional background image
+train,data\4 - two_class_v2\train\labels\frame_with_red_32_jpg.rf.a48def20828673d87c0f25088674146a.txt,empty_label_file,May be an intentional background image
+train,data\4 - two_class_v2\train\labels\frame_with_red_357_jpg.rf.0647824274282793628e441ed5d22a49.txt,empty_label_file,May be an intentional background image
+train,data\4 - two_class_v2\train\labels\frame_with_red_3_jpg.rf.9286ab2a32348a65a35415979f74f48b.txt,empty_label_file,May be an intentional background image
+train,data\4 - two_class_v2\train\labels\frame_with_red_5070_jpg.rf.4c9d71880ebb04de179e23534c72b676.txt,empty_label_file,May be an intentional background image
+train,data\4 - two_class_v2\train\labels\frame_with_red_5426_jpg.rf.5a3ced5c6554507a1f3f9d60b3436983.txt,empty_label_file,May be an intentional background image
+train,data\4 - two_class_v2\train\labels\frame_with_red_6901_jpg.rf.43500c2fca13a115d480529b2c3b5f63.txt,empty_label_file,May be an intentional background image
+train,data\4 - two_class_v2\train\labels\frame_with_red_7648_jpg.rf.d64153467356649f3f957ca9a78a3049.txt,empty_label_file,May be an intentional background image
+train,data\4 - two_class_v2\train\labels\frame_with_red_7821_jpg.rf.d8d9293c0c8dee5a3c5f17a9e384c8aa.txt,empty_label_file,May be an intentional background image
+valid,data\4 - two_class_v2\valid\labels\frame_with_red_6878_jpg.rf.34636bc50e9e7bd5164ca0ea98d46c5d.txt,empty_label_file,May be an intentional background image
+valid,data\4 - two_class_v2\valid\labels\frame_with_red_8908_jpg.rf.1a4229c6726614dded7d12db7170ff3a.txt,empty_label_file,May be an intentional background image
+valid,data\4 - two_class_v2\valid\labels\frame_with_red_9428_jpg.rf.62a5cc871c2114ae7b685effa913cff8.txt,empty_label_file,May be an intentional background image
+test,data\4 - two_class_v2\test\labels\frame_with_red_378_jpg.rf.924ce3633367e30ba6657720edf371fc.txt,empty_label_file,May be an intentional background image
+test,data\4 - two_class_v2\test\labels\frame_with_red_6888_jpg.rf.009ca08f33269e0ed736a58d89db7f8e.txt,empty_label_file,May be an intentional background image
+test,data\4 - two_class_v2\test\labels\frame_with_red_8175_jpg.rf.808f8b37862dc61c66b00c09b0bab697.txt,empty_label_file,May be an intentional background image
+test,data\4 - two_class_v2\test\labels\frame_with_red_9424_jpg.rf.4404ada3b92316403a8bbc51c7a727b3.txt,empty_label_file,May be an intentional background image
+test,data\4 - two_class_v2\test\labels\frame_with_red_9779_jpg.rf.cd2e69794f444e459280f2c8aa124501.txt,empty_label_file,May be an intentional background image

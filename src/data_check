@@ -20,11 +20,8 @@ import yaml
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
-# Two-class dataset
-DATA_ROOT = PROJECT_ROOT / "data" / "two_class"
-
-# Separate audit results from the original five-class audit
-OUTPUT_ROOT = PROJECT_ROOT / "results" / "two_class_audit"
+DATA_ROOT = PROJECT_ROOT / "data" / "4 - two_class_v2"
+OUTPUT_ROOT = PROJECT_ROOT / "results" / "two_class_v2_audit"
 SPLITS = ("train", "valid", "test")
 IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".bmp", ".webp", ".tif", ".tiff"}
 NEAR_DUPLICATE_DISTANCE = 4  # Hamming distance in a 64-bit difference hash

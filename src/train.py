@@ -25,8 +25,8 @@ def main():
         cache=False,
         device=0,
         seed=42,
-        data=str(PROJECT_ROOT / "data" / "two_class" / "data.yaml"),
-        name="yolo11n_2class_baseline",
+        data=str(PROJECT_ROOT / "data" / "4 - two_class_v2" / "data.yaml"),
+        name="yolo11n_2class_v2",
     )
 
 
