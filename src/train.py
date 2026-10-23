@@ -9,14 +9,13 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 
 def main():
-    """Fine-tune YOLO11n on five packaging defect classes."""
+    """Train YOLO11n using the revised two-class dataset."""
 
     # Load pretrained model weights
     model = YOLO(str(PROJECT_ROOT / "weights" / "yolo11n.pt"))
 
     # Train using the Roboflow annotations
     model.train(
-        data=str(PROJECT_ROOT / "data" / "data.yaml"),
         epochs=100,
         patience=10,
         imgsz=640,
