@@ -1,0 +1,8 @@
+{
+  "dataset_number": 4,
+  "split": "val",
+  "yolo11n_training_run": "yolo11n_2class_v2",
+  "yolo11n_evaluation_json": "runs\\yolo11n_2class_v2_val\\evaluation_summary.json",
+  "yolo11s_training_run": "yolo11s_2class_v2",
+  "yolo11s_evaluation_json": "runs\\yolo11s_2class_v2_val\\evaluation_summary.json"
+}

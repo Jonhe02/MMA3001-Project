@@ -66,7 +66,21 @@ def main() -> None:
     OUTPUT_ROOT = PROJECT_ROOT / "results" / f"{suffix}_audit"
 
     # Keep the rest of your existing main() unchanged.
-    """Check images, bounding boxes, class balance and duplicate images."""
+    """Read-only quality audit for YOLO object-detection datasets.
+
+    Run from the repository root:
+        python src/data_check.py --dataset 4
+
+    Dataset numbers are defined in src/experiment_config.py.
+
+    Dependencies:
+        numpy, opencv-python, PyYAML
+python src/data_check.py --dataset 4
+    Reports are saved to:
+        results/<dataset_suffix>_audit/
+
+    The script does not modify the original dataset.
+    """
     if not (DATA_ROOT / "data.yaml").exists():
         raise FileNotFoundError(f"Dataset configuration not found: {DATA_ROOT / 'data.yaml'}")
 

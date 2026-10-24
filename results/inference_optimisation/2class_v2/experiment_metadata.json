@@ -1,0 +1,47 @@
+{
+  "created_at_utc": "2026-10-24T02:18:02.063547+00:00",
+  "dataset_number": 4,
+  "dataset_yaml": "C:\\Uni work\\MMA3001 AI code\\MMA3001-Project\\data\\4 - two_class_v2\\data.yaml",
+  "dataset_description": "Rebalanced two-class dataset",
+  "evaluation_split": "val",
+  "images": 251,
+  "class_names": [
+    "packaging-error",
+    "unsealed"
+  ],
+  "trained_checkpoints": {
+    "yolo11n": {
+      "run": "yolo11n_2class_v2",
+      "weights": "C:\\Uni work\\MMA3001 AI code\\MMA3001-Project\\runs\\yolo11n_2class_v2\\weights\\best.pt"
+    },
+    "yolo11s": {
+      "run": "yolo11s_2class_v2",
+      "weights": "C:\\Uni work\\MMA3001 AI code\\MMA3001-Project\\runs\\yolo11s_2class_v2\\weights\\best.pt"
+    }
+  },
+  "models": [
+    "n",
+    "s"
+  ],
+  "sizes": [
+    320,
+    480,
+    640
+  ],
+  "confidence_thresholds": [
+    0.1,
+    0.25,
+    0.4,
+    0.6
+  ],
+  "batch_size": 4,
+  "device": "0",
+  "gt_match_iou": 0.5,
+  "nms_iou": 0.7,
+  "predict_rect": false,
+  "max_det": 300,
+  "mAP_evaluated": true,
+  "speed_measurement": "Mean Ultralytics Results.speed['inference'] (forward-pass ms/image). Same value repeated across thresholds for a given model/size.",
+  "matching_rule": "Class-aware, highest-confidence-first, one-to-one box matching at ground-truth IoU>=match_iou; micro precision/recall, including negative images.",
+  "note": "Validation-only; do not use test data for configuration selection. mAP uses separate low-conf validation and is not threshold-specific. Repeating optimisation overwrites the CSV/plots under this dataset slug."
+}
