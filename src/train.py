@@ -1,21 +1,24 @@
 
-"""Train a YOLO11n model to detect pork packaging defects."""
+"""Train YOLO11s for two-class packaging defect detection."""
 
 from pathlib import Path
 from ultralytics import YOLO
 
-# Get the project's root directory
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 
 def main():
-    """Train YOLO11n using the revised two-class dataset."""
+    """Fine-tune YOLO11s on the revised two-class dataset."""
 
-    # Load pretrained model weights
-    model = YOLO(str(PROJECT_ROOT / "weights" / "yolo11n.pt"))
+    # Load pretrained YOLO11s weights
+    model = YOLO("yolo11s.pt")
 
-    # Train using the Roboflow annotations
     model.train(
+        data=str(
+            PROJECT_ROOT / "data"
+            / "4 - two_class_v2"
+            / "data.yaml"
+        ),
         epochs=100,
         patience=10,
         imgsz=640,
@@ -24,8 +27,9 @@ def main():
         cache=False,
         device=0,
         seed=42,
-        data=str(PROJECT_ROOT / "data" / "4 - two_class_v2" / "data.yaml"),
-        name="yolo11n_2class_v2",
+        save=True,
+        project=str(PROJECT_ROOT / "runs"),
+        name="yolo11s_2class_v2"
     )
 
 
