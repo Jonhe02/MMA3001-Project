@@ -13,15 +13,13 @@ from pathlib import Path
 import csv
 import hashlib
 import math
-
+import argparse
+from experiment_config import select_dataset
 import cv2
 import numpy as np
 import yaml
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-
-DATA_ROOT = PROJECT_ROOT / "data" / "4 - two_class_v2"
-OUTPUT_ROOT = PROJECT_ROOT / "results" / "two_class_v2_audit"
 SPLITS = ("train", "valid", "test")
 IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".bmp", ".webp", ".tif", ".tiff"}
 NEAR_DUPLICATE_DISTANCE = 4  # Hamming distance in a 64-bit difference hash
@@ -48,6 +46,26 @@ def write_csv(path: Path, headers: list[str], rows: list[tuple]) -> None:
 
 
 def main() -> None:
+    """Audit the selected YOLO dataset."""
+
+    parser = argparse.ArgumentParser(
+        description="Audit a numbered YOLO dataset."
+    )
+    parser.add_argument(
+        "--dataset",
+        type=int,
+        choices=[1, 2, 3, 4],
+        default=4
+    )
+
+    args = parser.parse_args()
+
+    _, yaml_path, suffix, _ = select_dataset(args.dataset)
+
+    DATA_ROOT = yaml_path.parent
+    OUTPUT_ROOT = PROJECT_ROOT / "results" / f"{suffix}_audit"
+
+    # Keep the rest of your existing main() unchanged.
     """Check images, bounding boxes, class balance and duplicate images."""
     if not (DATA_ROOT / "data.yaml").exists():
         raise FileNotFoundError(f"Dataset configuration not found: {DATA_ROOT / 'data.yaml'}")

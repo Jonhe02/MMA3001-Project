@@ -76,7 +76,7 @@ def main():
     print(f"YAML: {dataset_yaml}")
     print(f"Pretrained weights: {pretrained}")
     print(f"Saving to: {RUNS_DIR / run_name}")
-    model = YOLO(pretrained)
+    model = YOLO(str(PROJECT_ROOT / "weights" / f"yolo11{args.model}.pt"))
     model.train(**settings)
 
     # Save a compact experiment record alongside Ultralytics' args.yaml.
