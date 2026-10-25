@@ -1,0 +1,56 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.5, pytest-9.1.1, pluggy-1.6.0 -- C:\Uni work\MMA3001 AI code\MMA3001-Project\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Uni work\MMA3001 AI code\MMA3001-Project
+configfile: pytest.ini
+plugins: anyio-4.15.1
+collecting ... collected 45 items
+
+tests/test_dataset_audit.py::test_audit_reports_valid_empty_missing_invalid_and_duplicates PASSED [  2%]
+tests/test_dataset_audit.py::test_audit_reports_missing_dataset PASSED   [  4%]
+tests/test_detection_metrics.py::test_identical_and_nonoverlapping_boxes PASSED [  6%]
+tests/test_detection_metrics.py::test_yolo_normalised_annotations_convert_to_pixel_boxes PASSED [  8%]
+tests/test_detection_metrics.py::test_empty_annotation_is_a_valid_negative_image PASSED [ 11%]
+tests/test_detection_metrics.py::test_bad_yolo_annotations_are_rejected[2 0.5 0.5 0.2 0.2\n] PASSED [ 13%]
+tests/test_detection_metrics.py::test_bad_yolo_annotations_are_rejected[0 0.95 0.5 0.2 0.2\n] PASSED [ 15%]
+tests/test_detection_metrics.py::test_bad_yolo_annotations_are_rejected[0 0.5 0.5 -0.1 0.2\n] PASSED [ 17%]
+tests/test_detection_metrics.py::test_bad_yolo_annotations_are_rejected[0 0.5 0.5\n] PASSED [ 20%]
+tests/test_detection_metrics.py::test_bad_yolo_annotations_are_rejected[0 NaN 0.5 0.2 0.2\n] PASSED [ 22%]
+tests/test_detection_metrics.py::test_missing_annotation_file_fails_loudly PASSED [ 24%]
+tests/test_detection_metrics.py::test_correct_detection_counts_as_true_positive PASSED [ 26%]
+tests/test_detection_metrics.py::test_duplicate_predictions_do_not_both_match_one_defect PASSED [ 28%]
+tests/test_detection_metrics.py::test_wrong_class_is_false_positive_and_false_negative PASSED [ 31%]
+tests/test_detection_metrics.py::test_confidence_threshold_discards_lower_scored_detections PASSED [ 33%]
+tests/test_detection_metrics.py::test_background_detection_is_false_alarm PASSED [ 35%]
+tests/test_detection_metrics.py::test_precision_recall_f1_f2_formulas PASSED [ 37%]
+tests/test_detection_metrics.py::test_zero_predictions_do_not_divide_by_zero PASSED [ 40%]
+tests/test_detection_metrics.py::test_final_test_class_names_and_split_are_validated PASSED [ 42%]
+tests/test_experiment_config.py::test_select_dataset_resolves_number[1-1 - five_class-5class_aug] PASSED [ 44%]
+tests/test_experiment_config.py::test_select_dataset_resolves_number[2-2 - two_class-2class_v1] PASSED [ 46%]
+tests/test_experiment_config.py::test_select_dataset_resolves_number[3-3 - raw_unaug-5class_unaug] PASSED [ 48%]
+tests/test_experiment_config.py::test_select_dataset_resolves_number[4-4 - two_class_v2-2class_v2] PASSED [ 51%]
+tests/test_experiment_config.py::test_invalid_dataset_number_is_rejected[0] PASSED [ 53%]
+tests/test_experiment_config.py::test_invalid_dataset_number_is_rejected[5] PASSED [ 55%]
+tests/test_experiment_config.py::test_invalid_dataset_number_is_rejected[nine] PASSED [ 57%]
+tests/test_experiment_config.py::test_invalid_dataset_number_is_rejected[] PASSED [ 60%]
+tests/test_experiment_config.py::test_invalid_dataset_number_is_rejected[None] PASSED [ 62%]
+tests/test_experiment_config.py::test_missing_dataset_is_reported PASSED [ 64%]
+tests/test_experiment_config.py::test_model_selection[n-n] PASSED        [ 66%]
+tests/test_experiment_config.py::test_model_selection[S-s] PASSED        [ 68%]
+tests/test_experiment_config.py::test_model_selection[  s  -s] PASSED    [ 71%]
+tests/test_experiment_config.py::test_invalid_model_selection PASSED     [ 73%]
+tests/test_experiment_config.py::test_training_run_name PASSED           [ 75%]
+tests/test_experiment_config.py::test_repeat_runs_get_unique_names PASSED [ 77%]
+tests/test_experiment_config.py::test_checkpoint_lookup_selects_latest_numbered_run PASSED [ 80%]
+tests/test_experiment_config.py::test_checkpoint_lookup_rejects_wrong_run PASSED [ 82%]
+tests/test_experiment_config.py::test_checkpoint_lookup_requires_saved_weights PASSED [ 84%]
+tests/test_model_comparison.py::test_run_name_recognises_reruns PASSED   [ 86%]
+tests/test_model_comparison.py::test_load_summary_validates_json PASSED  [ 88%]
+tests/test_model_comparison.py::test_metric_value_reads_inference_time_and_rejects_missing PASSED [ 91%]
+tests/test_model_comparison.py::test_summary_selection_ignores_other_datasets_and_splits PASSED [ 93%]
+tests/test_preprocessing.py::test_converter_remaps_classes_and_preserves_background PASSED [ 95%]
+tests/test_preprocessing.py::test_converter_does_not_overwrite_existing_dataset PASSED [ 97%]
+tests/test_preprocessing.py::test_converter_requires_corresponding_label PASSED [100%]
+
+- generated xml file: C:\Uni work\MMA3001 AI code\MMA3001-Project\results\software_tests\pytest_results.xml -
+============================= 45 passed in 1.69s ==============================

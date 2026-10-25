@@ -60,7 +60,7 @@ Run all commands below **from the repository root**.
 Replace the example GitHub address with this repository's actual URL:
 
 ```powershell
-git clone https://github.com/YOUR_USERNAME/YOUR_REPOSITORY.git MMA3001-Project
+git clone https://github.com/Jonhe02/MMA3001-Project
 cd MMA3001-Project
 ```
 
@@ -166,5 +166,12 @@ To regenerate HTML documentation in PowerShell:
 $env:PYTHONPATH = (Resolve-Path .\src).Path + ";" + (Get-Location).Path
 python -m pdoc -o docs src
 ```
+
+## Software testing
+
+Run the automated verification suite:
+
+```powershell
+python run_tests.py
 
 **Repository note:** `data/`, `runs/`, `*.pt` and `.venv/` are excluded by `.gitignore`. Source code, HTML documentation and small reports can be tracked. To reproduce the *exact* existing predictions, obtain the matching dataset and trained checkpoint; otherwise, train the models using the commands above.
