@@ -55,6 +55,7 @@ DEFAULT_THRESHOLDS = (0.10, 0.25, 0.40, 0.60)
 def parse_args() -> argparse.Namespace:
     """Define repeatable command-line experiment settings."""
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output-name", type=str, default=None, help="Custom folder name for optimisation results.")
     parser.add_argument("--dataset", type=int, choices=(1, 2, 3, 4), default=4)
     parser.add_argument("--models", nargs="+", choices=("n", "s"), default=["n", "s"])
     parser.add_argument("--sizes", nargs="+", type=int, default=list(DEFAULT_SIZES))
@@ -268,7 +269,8 @@ def run_experiment(args: argparse.Namespace) -> Path:
     if not label_dir.is_dir():
         raise FileNotFoundError(f"Validation label directory not found: {label_dir}")
 
-    out_dir = PROJECT_ROOT / "results" / "inference_optimisation" / slug
+    folder_name = args.output_name or slug
+    out_dir = PROJECT_ROOT / "results" / "inference_optimisation" / folder_name
     out_dir.mkdir(parents=True, exist_ok=True)
     summary_rows = []
     class_rows = []

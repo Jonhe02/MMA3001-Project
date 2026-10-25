@@ -1,0 +1,2 @@
+﻿model,training_run,dataset,split,images,imgsz,confidence,tp,fp,fn,precision,recall,f1,f2,inference_ms_per_image,prediction_wall_seconds,negative_images,negative_images_flagged,negative_image_false_alarm_rate,images_with_labelled_defects,images_with_labelled_defects_flagged,flagged_images,map50_low_conf,map50_95_low_conf
+yolo11s,yolo11s_2class_v2,4,test,233,640,0.2,169,215,123,0.4401041666666667,0.5787671232876712,0.5,0.5444587628865979,10.993327038630428,12.722854699997697,5,3,0.6,228,206,209,0.5727030352809072,0.2749393916787349
